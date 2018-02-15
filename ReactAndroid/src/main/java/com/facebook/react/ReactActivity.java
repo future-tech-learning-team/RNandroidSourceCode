@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
@@ -51,39 +52,46 @@ public abstract class ReactActivity extends Activity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.i("ReactActivity","onCreate");
     mDelegate.onCreate(savedInstanceState);
   }
 
   @Override
   protected void onPause() {
     super.onPause();
+    Log.i("ReactActivity","onPause");
     mDelegate.onPause();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
+    Log.i("ReactActivity","onResume");
     mDelegate.onResume();
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    Log.i("ReactActivity","onDestroy");
     mDelegate.onDestroy();
   }
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.i("ReactActivity","onActivityResult");
     mDelegate.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
+    Log.i("ReactActivity","onKeyUp");
     return mDelegate.onKeyUp(keyCode, event) || super.onKeyUp(keyCode, event);
   }
 
   @Override
   public void onBackPressed() {
+    Log.i("ReactActivity","onBackPressed");
     if (!mDelegate.onBackPressed()) {
       super.onBackPressed();
     }
@@ -96,6 +104,7 @@ public abstract class ReactActivity extends Activity
 
   @Override
   public void onNewIntent(Intent intent) {
+    Log.i("ReactActivity","onNewIntent");
     if (!mDelegate.onNewIntent(intent)) {
       super.onNewIntent(intent);
     }
