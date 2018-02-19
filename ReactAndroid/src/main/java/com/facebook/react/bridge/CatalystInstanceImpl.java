@@ -140,6 +140,7 @@ public class CatalystInstanceImpl implements CatalystInstance {
 
     @Override
     public void onBatchComplete() {
+      Log.e("java_onBatchComplete","onBatchComplete");
       CatalystInstanceImpl impl = mOuter.get();
       if (impl != null) {
         impl.mNativeModuleRegistry.onBatchComplete();
@@ -148,6 +149,7 @@ public class CatalystInstanceImpl implements CatalystInstance {
 
     @Override
     public void incrementPendingJSCalls() {
+      Log.e("java_Calls","incrementPendingJSCalls");
       CatalystInstanceImpl impl = mOuter.get();
       if (impl != null) {
         impl.incrementPendingJSCalls();
@@ -156,6 +158,7 @@ public class CatalystInstanceImpl implements CatalystInstance {
 
     @Override
     public void decrementPendingJSCalls() {
+      Log.e("java_Calls","decrementPendingJSCalls");
       CatalystInstanceImpl impl = mOuter.get();
       if (impl != null) {
         impl.decrementPendingJSCalls();

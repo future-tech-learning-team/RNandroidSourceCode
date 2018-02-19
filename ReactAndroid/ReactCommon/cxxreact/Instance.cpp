@@ -23,6 +23,7 @@
 #include <fstream>
 #include <mutex>
 #include <string>
+#include <android/log.h>
 
 namespace facebook {
 namespace react {
@@ -40,7 +41,7 @@ void Instance::initializeBridge(
     std::shared_ptr<ModuleRegistry> moduleRegistry) {
   callback_ = std::move(callback);
   moduleRegistry_ = std::move(moduleRegistry);
-
+  __android_log_print(ANDROID_LOG_ERROR, "测试initializeBridge", "initializeBridge");
   jsQueue->runOnQueueSync([this, &jsef, jsQueue]() mutable {
     nativeToJsBridge_ = folly::make_unique<NativeToJsBridge>(
         jsef.get(), moduleRegistry_, jsQueue, callback_);
@@ -57,6 +58,8 @@ void Instance::loadApplication(std::unique_ptr<RAMBundleRegistry> bundleRegistry
                                std::unique_ptr<const JSBigString> string,
                                std::string sourceURL) {
   callback_->incrementPendingJSCalls();
+
+  __android_log_print(ANDROID_LOG_ERROR, "测试loadApplication_sourceURL", "sourceURL");
   SystraceSection s("Instance::loadApplication", "sourceURL",
                     sourceURL);
   nativeToJsBridge_->loadApplication(std::move(bundleRegistry), std::move(string),

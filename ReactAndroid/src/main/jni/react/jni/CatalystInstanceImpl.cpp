@@ -25,6 +25,7 @@
 #include "JNativeRunnable.h"
 #include "JniJSModulesUnbundle.h"
 #include "NativeArray.h"
+#include <android/log.h>
 
 using namespace facebook::jni;
 
@@ -58,6 +59,7 @@ class JInstanceCallback : public InstanceCallback {
     // managed by the module, via callJSCallback or callJSFunction.  So,
     // we ensure that it is registered with the JVM.
     jni::ThreadScope guard;
+//    __android_log_print(ANDROID_LOG_ERROR, "测试incrementPendingJSCalls", "incrementPendingJSCalls");
     static auto method =
       ReactCallback::javaClassStatic()->getMethod<void()>("incrementPendingJSCalls");
     method(jobj_);
@@ -65,6 +67,7 @@ class JInstanceCallback : public InstanceCallback {
 
   void decrementPendingJSCalls() override {
     jni::ThreadScope guard;
+//    __android_log_print(ANDROID_LOG_ERROR, "测试decrementPendingJSCalls", "decrementPendingJSCalls");
     static auto method =
       ReactCallback::javaClassStatic()->getMethod<void()>("decrementPendingJSCalls");
     method(jobj_);
@@ -79,6 +82,7 @@ class JInstanceCallback : public InstanceCallback {
 
 jni::local_ref<CatalystInstanceImpl::jhybriddata> CatalystInstanceImpl::initHybrid(
     jni::alias_ref<jclass>) {
+  __android_log_print(ANDROID_LOG_ERROR, "测试initHybrid", "initHybrid");
   return makeCxxInstance();
 }
 
@@ -111,18 +115,18 @@ void CatalystInstanceImpl::registerNatives() {
 }
 
 void CatalystInstanceImpl::initializeBridge(
-    jni::alias_ref<ReactCallback::javaobject> callback,
-    // This executor is actually a factory holder.
-    JavaScriptExecutorHolder* jseh,
-    jni::alias_ref<JavaMessageQueueThread::javaobject> jsQueue,
-    jni::alias_ref<JavaMessageQueueThread::javaobject> nativeModulesQueue,
-    jni::alias_ref<jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
-    jni::alias_ref<jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
-  // TODO mhorowitz: how to assert here?
-  // Assertions.assertCondition(mBridge == null, "initializeBridge should be called once");
-  moduleMessageQueue_ = std::make_shared<JMessageQueueThread>(nativeModulesQueue);
+  jni::alias_ref<ReactCallback::javaobject> callback,
+  // This executor is actually a factory holder.
+  JavaScriptExecutorHolder* jseh,
+  jni::alias_ref<JavaMessageQueueThread::javaobject> jsQueue,
+  jni::alias_ref<JavaMessageQueueThread::javaobject> nativeModulesQueue,
+  jni::alias_ref<jni::JCollection<JavaModuleWrapper::javaobject>::javaobject> javaModules,
+  jni::alias_ref<jni::JCollection<ModuleHolder::javaobject>::javaobject> cxxModules) {
+    // TODO mhorowitz: how to assert here?
+    // Assertions.assertCondition(mBridge == null, "initializeBridge should be called once");
+    moduleMessageQueue_ = std::make_shared<JMessageQueueThread>(nativeModulesQueue);
 
-  // This used to be:
+    // This used to be:
   //
   // Java CatalystInstanceImpl -> C++ CatalystInstanceImpl -> Bridge -> Bridge::Callback
   // --weak--> ReactCallback -> Java CatalystInstanceImpl
@@ -182,6 +186,7 @@ void CatalystInstanceImpl::jniLoadScriptFromAssets(
   auto manager = extractAssetManager(assetManager);
   auto script = loadScriptFromAssets(manager, sourceURL);
   if (JniJSModulesUnbundle::isUnbundle(manager, sourceURL)) {
+    __android_log_print(ANDROID_LOG_ERROR, "测试jniLoadScriptFromAssets_if", "sourceURL");
     auto bundle = JniJSModulesUnbundle::fromEntryFile(manager, sourceURL);
     auto registry = RAMBundleRegistry::singleBundleRegistry(std::move(bundle));
     instance_->loadRAMBundle(
@@ -191,6 +196,7 @@ void CatalystInstanceImpl::jniLoadScriptFromAssets(
       loadSynchronously);
     return;
   } else {
+    __android_log_print(ANDROID_LOG_ERROR, "测试jniLoadScriptFromAssets_else", "sourceURL");
     instance_->loadScriptFromString(std::move(script), sourceURL, loadSynchronously);
   }
 }
@@ -199,6 +205,7 @@ void CatalystInstanceImpl::jniLoadScriptFromFile(const std::string& fileName,
                                                  const std::string& sourceURL,
                                                  bool loadSynchronously) {
   if (Instance::isIndexedRAMBundle(fileName.c_str())) {
+    __android_log_print(ANDROID_LOG_ERROR, "测试jniLoadScriptFromFile_if", "测试jniLoadScriptFromFile_if");
     instance_->loadRAMBundleFromFile(fileName, sourceURL, loadSynchronously);
   } else {
     std::unique_ptr<const JSBigFileString> script;
@@ -206,6 +213,7 @@ void CatalystInstanceImpl::jniLoadScriptFromFile(const std::string& fileName,
       [&fileName, &script]() {
         script = JSBigFileString::fromPath(fileName);
       });
+    __android_log_print(ANDROID_LOG_ERROR, "测试jniLoadScriptFromFile_else", "测试jniLoadScriptFromFile_if");
     instance_->loadScriptFromString(std::move(script), sourceURL, loadSynchronously);
   }
 }
@@ -218,6 +226,8 @@ void CatalystInstanceImpl::jniCallJSFunction(std::string module, std::string met
   // used as ids if isFinite(), which handles this case, and looked up as
   // strings otherwise.  Eventually, we'll probably want to modify the stack
   // from the JS proxy through here to use strings, too.
+  facebook::react::String test = "jniCallJSFunction";
+  __android_log_print(ANDROID_LOG_ERROR, "测试jniCallJSFunction", "%d",test);
   instance_->callJSFunction(std::move(module),
                             std::move(method),
                             arguments->consume());

@@ -14,7 +14,7 @@ react-native init RNandroidSoureCode --version 0.52.2
 
 
 ### 3.gradle设置
-Android项目 settings.gradle
+Android项目根目录 settings.gradle
 
 ```
 project(':ReactAndroid').projectDir = new File(
