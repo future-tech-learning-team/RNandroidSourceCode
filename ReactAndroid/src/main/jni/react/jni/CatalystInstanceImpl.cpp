@@ -226,8 +226,9 @@ void CatalystInstanceImpl::jniCallJSFunction(std::string module, std::string met
   // used as ids if isFinite(), which handles this case, and looked up as
   // strings otherwise.  Eventually, we'll probably want to modify the stack
   // from the JS proxy through here to use strings, too.
-  facebook::react::String test = "jniCallJSFunction";
-  __android_log_print(ANDROID_LOG_ERROR, "测试jniCallJSFunction", "%d",test);
+  std::string test = "jniCallJSFunction";
+  char *p3 = (char*)test.c_str();
+//  __android_log_print(ANDROID_LOG_ERROR, "测试jniCallJSFunction", "%s",p3);
   instance_->callJSFunction(std::move(module),
                             std::move(method),
                             arguments->consume());

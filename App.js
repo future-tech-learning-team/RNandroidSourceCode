@@ -9,6 +9,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  Alert,
   View
 } from 'react-native';
 
@@ -23,7 +24,15 @@ export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
+        <Text
+          style={styles.welcome}
+          onPress={()=>{
+            console.log('JS______Global',Global);
+            if(Global) {
+              Alert.alert('打印Global',Global);
+            }
+          }}
+        >
           Welcome to React Native!
         </Text>
         <Text style={styles.instructions}>
